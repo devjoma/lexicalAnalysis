@@ -1,11 +1,26 @@
-// Melhoria na perte do Type do input
-  // Adicionar o igual (==)
-
-
 function lexer(input) {
   const tokens = [];
 
-  const regex = /\d+|[a-z]+|\+|\-|\*|\//g;
+    const keywords = {
+    BEGIN: 'INITIALIZER',
+    PROGRAM: 'INITIALIZER',
+    INTEGER: 'INITIALIZER',
+    BOOLEAN: 'INITIALIZER',
+    END: 'INITIALIZER',
+    WHILE: 'INITIALIZER',
+    DO: 'INITIALIZER',
+    READ: 'INITIALIZER',
+    VAR: 'INITIALIZER',
+    FALSE: 'INITIALIZER',
+    TRUE: 'INITIALIZER',
+    WRITE: 'INITIALIZER',
+  };
+
+  // separar
+  const regex = /\d+(\.\d+)?|>=|=|BEGIN|PROGRAM|INTEGER|BOOLEAN|END|WHILE|DO|READ|VAR|FALSE|TRUE|WRITE|.[a-z]+|\+|\-|\*|\//g;
+  const WORD = /\bBEGIN|PROGRAM|INTEGER|BOOLEAN|END|WHILE|DO|READ|VAR|FALSE|TRUE|WRITE\b/g
+  const NUMBER = /\d+(\.\d+)?/g
+  const IDENTIFIER = /[a-z]+/
 
   let match;
   while ((match = regex.exec(input)) !== null) {
@@ -14,9 +29,11 @@ function lexer(input) {
       type: null
     };
 
-    if (/\d+/.test(token.value)) {
+    if (NUMBER.test(token.value)) {
       token.type = 'NUMBER';
-    } else if (/[a-z]+/.test(token.value)) {
+    } else if (WORD.test(token.value)) {
+       token.type = 'INITIALIZER';
+    } else if (IDENTIFIER.test(token.value)) {
       token.type = 'IDENTIFIER';
     } else {
       token.type = 'OPERATOR';
@@ -28,4 +45,4 @@ function lexer(input) {
   return tokens;
 }
 
-console.log(lexer("x = a+b*2"))
+console.log(lexer("BEGIN x = a >= b * 2.1"))
